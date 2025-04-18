@@ -1,9 +1,12 @@
 service: lambda-fastify-nestjs
+frameworkVersion: "^4.0.0"
 app: lambda-fastify-nestjs
 provider:
   name: aws
-  runtime: nodejs18.x
+  runtime: nodejs20.x
   region: us-east-1
+configValidationMode: error
+useDotenv: true
 
 functions:
   main:
@@ -12,7 +15,16 @@ functions:
       - http:
           method: GET
           path: /{proxy+}
+custom:
+  prune:
+    automatic: true
+    number: 2
+  addHttpOffline:
+    dev: []
+    local:
+      - httpApi:
+          method: "*"
+          path: "/{proxy+}"
 
 plugins:
   - serverless-offline
-  # - serverless-plugin-typescript
