@@ -1,0 +1,31 @@
+{
+  "name": "lambda-fastify-nestjs",
+  "version": "1.0.0",
+  "description": "proyecto de aws lambda con fastify y nestjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "local": "npm run build && npx sls offline",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fastify/aws-lambda": "^5.1.4",
+    "@nestjs/common": "^11.0.16",
+    "@nestjs/core": "^11.0.16",
+    "@nestjs/platform-fastify": "^11.0.16",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2"
+  },
+  "devDependencies": {
+    "@types/aws-lambda-fastify": "^1.4.5",
+    "@types/node": "^22.14.1",
+    "serverless": "^4.12.0",
+    "serverless-http": "^3.2.0",
+    "serverless-offline": "^14.4.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
