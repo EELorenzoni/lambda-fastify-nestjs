@@ -15,6 +15,4 @@ export class AppService {
         return '¡Hola Mundo desde NestJS!';
     }
 
-
-
 }

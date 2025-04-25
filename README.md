@@ -1,245 +1,96 @@
-# Proyecto NestJS Serverless en AWS Lambda con Fastify
+# Proyecto Lambda con NestJS y Fastify
 
-Este proyecto demuestra cómo crear y desplegar una aplicación NestJS en AWS Lambda utilizando Serverless Framework y Fastify, sin depender del CLI de NestJS.
+Este proyecto es una aplicación construida con NestJS y Fastify, desplegada en AWS Lambda utilizando Serverless Framework.
 
-## Requisitos Previos
+## Prerrequisitos
 
-* Node.js y npm instalados.
-* Cuenta de AWS y AWS CLI configurado.
-* Cuenta de GitHub.
-* Serverless Framework instalado (`npm install -g serverless`).
-* Configuración de claves SSH para GitHub (opcional, pero recomendado).
+Asegúrate de tener instalado lo siguiente en tu entorno de desarrollo:
 
-## Configuración de claves SSH para GitHub (Opcional)
+* **Node.js** (versión recomendada: >= 18)
+* **npm** o **yarn** como gestor de paquetes
+* **Serverless Framework** (`npm install -g serverless`)
+* **AWS CLI** configurado con tus credenciales de AWS
 
-Si deseas usar claves SSH separadas para diferentes cuentas de GitHub, sigue estos pasos:
+## Pasos para la Configuración y Despliegue
 
-1. **Crea el archivo `~/.ssh/config`:**
-
+1.  **Clonar el Repositorio (si aún no lo has hecho):**
     ```bash
-    mkdir ~/.ssh
-    touch ~/.ssh/config
-    nano ~/.ssh/config
+    git clone TU_REPOSITORIO.git
+    cd lambda-fastify-nestjs
     ```
 
-2. **Configura el archivo `config`:**
-
-    Añade la siguiente configuración, ajustando las rutas y nombres de host según tus necesidades:
-
-    ```
-    # Cuenta personal
-    Host github.com-personal
-      HostName github.com
-      User git
-      IdentityFile ~/.ssh/id_ed25519_personal
-
-    # Cuenta de trabajo
-    Host github.com-trabajo
-      HostName github.com
-      User git
-      IdentityFile ~/.ssh/id_ed25519_trabajo
-    ```
-
-3. **Genera las claves SSH:**
-
+2.  **Instalar las Dependencias:**
     ```bash
-    ssh-keygen -t ed25519 -C "tu_correo_personal@ejemplo.com" -f ~/.ssh/id_ed25519_personal
-    ssh-keygen -t ed25519 -C "tu_correo_trabajo@ejemplo.com" -f ~/.ssh/id_ed25519_trabajo
-    ```
-
-4. **Añade las claves públicas a tus cuentas de GitHub:**
-
-    Copia el contenido de `~/.ssh/id_ed25519_personal.pub` y `~/.ssh/id_ed25519_trabajo.pub` y añádelas a la configuración SSH de tus cuentas de GitHub.
-
-5. **Clona el repositorio usando la URL SSH correcta:**
-
-    ```bash
-    git clone git@github.com-personal:usuario/repositorio.git
+    npm install
     # o
-    git clone git@github.com-trabajo:organizacion/repositorio.git
+    yarn install
+    ```
+    Este comando instalará todas las librerías necesarias definidas en el `package.json`, incluyendo NestJS, Fastify, el adaptador para AWS Lambda y las dependencias de desarrollo.
+
+3.  **Configurar las Variables de Entorno (Opcional):**
+    Si tu aplicación requiere variables de entorno, crea un archivo `.env` en la raíz del proyecto y define tus variables. El archivo `serverless.yml` está configurado para cargar estas variables automáticamente gracias a `useDotenv: true`.
+
+    ```
+    # Ejemplo de .env
+    # DATABASE_URL=tu_url_de_base_de_datos
     ```
 
-## Crear el Proyecto NestJS sin CLI
-
-1. **Crea el directorio del proyecto:**
+4.  **Construir la Aplicación NestJS:**
+    Ejecuta el siguiente comando para compilar el código TypeScript de NestJS a JavaScript. Los archivos compilados se generarán en la carpeta `dist`, según lo configurado en el `tsconfig.json` y referenciado en `serverless.yml`.
 
     ```bash
-    mkdir mi-proyecto-nestjs
-    cd mi-proyecto-nestjs
+    npm run build
+    # o
+    yarn build
     ```
 
-2. **Inicializa un proyecto Node.js:**
+5.  **Desplegar a AWS Lambda con Serverless:**
+    Utiliza el siguiente comando para desplegar tu aplicación a AWS Lambda. Serverless Framework se encargará de empaquetar tu código, crear la función Lambda y configurar las rutas de API Gateway definidas en `serverless.yml`.
 
     ```bash
-    npm init -y
+    npx sls deploy
+    # o
+    yarn sls deploy
     ```
+    Este proceso puede tardar unos minutos. Una vez completado, Serverless Framework mostrará la URL del endpoint de tu API Gateway.
 
-3. **Instala NestJS y dependencias:**
+6.  **Probar la Aplicación:**
+    Una vez desplegada, puedes acceder a tu aplicación a través de la URL proporcionada por Serverless.
+
+    * La ruta raíz (`/`) está configurada para responder a peticiones `GET`.
+    * Cualquier otra ruta (`/{proxy+}`) también está configurada para reenviar las peticiones a tu aplicación NestJS/Fastify.
+
+    Puedes usar herramientas como `curl`, Postman o un navegador web para probar tus endpoints.
+
+7.  **Despliegue Local (Opcional):**
+    Para probar tu aplicación localmente sin necesidad de desplegarla en AWS, puedes usar el plugin `serverless-offline`.
 
     ```bash
-    npm install @nestjs/core @nestjs/common rxjs reflect-metadata @nestjs/platform-fastify aws-lambda-fastify
-    npm install typescript ts-node @types/node --save-dev
+    npm run local
+    # o
+    yarn local
     ```
+    Esto iniciará un servidor local que emula el entorno de AWS Lambda y API Gateway. Podrás acceder a tus rutas en `http://localhost:3000`.
 
-4. **Configura TypeScript (tsconfig.json):**
+## Comandos Útiles
 
-    Crea un archivo `tsconfig.json` con la siguiente configuración:
+* `npm run build`: Compila la aplicación NestJS.
+* `npm run local`: Inicia el servidor local de Serverless Offline.
+* `npx sls deploy`: Despliega la aplicación a AWS Lambda.
+* `npx sls remove`: Elimina la aplicación de AWS Lambda.
+* `npx sls info`: Muestra información sobre el despliegue actual.
 
-    ```json
-    {
-      "compilerOptions": {
-        "module": "commonjs",
-        "esModuleInterop": true,
-        "target": "es2017",
-        "noImplicitAny": true,
-        "moduleResolution": "node",
-        "sourceMap": true,
-        "outDir": "dist",
-        "baseUrl": ".",
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "resolveJsonModule": true,
-        "paths": {
-          "*": [
-            "node_modules/*"
-          ]
-        }
-      },
-      "include": [
-        "src/**/*"
-      ]
-    }
-    ```
+## Estructura de Carpetas básica
 
-5. **Estructura del proyecto:**
-
-    * `src/main.ts`:
-
-        ```typescript
-        import { NestFactory } from '@nestjs/core';
-        import { AppModule } from './app.module';
-        import { configure as serverlessFastify } from '@vendia/serverless-fastify';
-        import { Callback, Context, Handler } from 'aws-lambda';
-        import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
-
-        let cachedServer: Handler;
-
-        async function bootstrap(): Promise<Handler> {
-          if (!cachedServer) {
-            const app = await NestFactory.create<NestFastifyApplication>(
-              AppModule,
-              new FastifyAdapter(),
-            );
-            await app.init();
-            await app.getHttpAdapter().getInstance().ready();
-            cachedServer = serverlessFastify({ app: app.getHttpAdapter().getInstance() });
-          }
-          return cachedServer;
-        }
-
-        export const handler: Handler = async (
-          event: any,
-          context: Context,
-          callback: Callback,
-        ) => {
-          const cachedServer = await bootstrap();
-          return cachedServer(event, context, callback);
-        };
-        ```
-
-    * `src/app.module.ts`:
-
-        ```typescript
-        import { Module } from '@nestjs/common';
-        import { AppController } from './app.controller';
-        import { AppService } from './app.service';
-
-        @Module({
-          imports: [],
-          controllers: [AppController],
-          providers: [AppService],
-        })
-        export class AppModule {}
-        ```
-
-    * `src/app.controller.ts`:
-
-        ```typescript
-        import { Controller, Get } from '@nestjs/common';
-        import { AppService } from './app.service';
-
-        @Controller()
-        export class AppController {
-          constructor(private readonly appService: AppService) {}
-
-          @Get()
-          getHello(): string {
-            return this.appService.getHello();
-          }
-        }
-        ```
-
-    * `src/app.service.ts`:
-
-        ```typescript
-        import { Injectable } from '@nestjs/common';
-
-        @Injectable()
-        export class AppService {
-          getHello(): string {
-            return '¡Hola Mundo desde NestJS!';
-          }
-        }
-        ```
-
-## Configuración para Serverless Framework
-
-1. **Instala Serverless Framework y dependencias:**
-
-    ```bash
-    npm install serverless serverless-http --save-dev
-    npm install serverless-plugin-typescript@latest -D ## tener en cuenta que no siempre tine compatibilidad con todas las versiones de serverles framework
-    ```
-
-2. **Crea `serverless.yml`:**
-
-    ```yaml
-    service: mi-proyecto-nestjs
-
-    provider:
-      name: aws
-      runtime: nodejs18.x
-      region: us-east-1 # Reemplaza con tu región
-
-    functions:
-      main:
-        handler: dist/lambda.handler
-        events:
-          - http:
-              method: ANY
-              path: /{proxy+}
-    plugins:
-      - serverless-offline
-      - serverless-plugin-typescript
-
-    ```
-
-## Despliegue en AWS Lambda
-
-1. **Construye el proyecto:**
-
-    ```bash
-    npx tsc
-    ```
-
-2. **Despliega el proyecto:**
-
-    ```bash
-    npx serverless deploy
-    ```
-
-## Pruebas locales
-
-```bash
-npm install serverless-offline --save-dev
-npm run local # o npx sls offline
+├── LICENSE
+├── package-lock.json
+├── package.json
+├── README.md                  # Este archivo
+├── serverless.yml            # Configuración de Serverless Framework
+├── src                      # Código fuente de la aplicación NestJS
+│   ├── app.controller.ts    # Controlador principal de la aplicación
+│   ├── app.module.ts        # Módulo principal de la aplicación
+│   ├── app.service.ts       # Servicio principal de la aplicación
+│   ├── lambda.ts            # Handler para AWS Lambda
+│   └── main.ts              # Punto de entrada principal de NestJS
+└── tsconfig.json            # Configuración del compilador TypeScript
