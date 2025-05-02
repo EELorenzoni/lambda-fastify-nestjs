@@ -15,12 +15,15 @@
     "@fastify/aws-lambda": "^5.1.4",
     "@nestjs/common": "^11.0.16",
     "@nestjs/core": "^11.0.16",
+    "@nestjs/mapped-types": "*",
     "@nestjs/platform-fastify": "^11.0.16",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2"
   },
   "devDependencies": {
+    "@nestjs/testing": "^11.1.0",
     "@types/aws-lambda-fastify": "^1.4.5",
+    "@types/jest": "^29.5.14",
     "@types/node": "^22.14.1",
     "aws-lambda": "^1.0.7",
     "serverless": "^4.14.0",

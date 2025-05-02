@@ -1,7 +1,7 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { AppService } from './app.service';
 
-@Controller('v1/api/decisionsLists')
+@Controller('v1/api/app')
 export class AppController {
     constructor(private readonly appService: AppService) { }
 
