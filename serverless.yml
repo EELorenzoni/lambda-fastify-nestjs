@@ -12,6 +12,7 @@ useDotenv: true
 functions:
   main:
     handler: dist/lambda.handler
+    timeout: 900
     events:
       - http:
           method: GET

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { DecisionListsService } from './decision-lists.service';
 import { CreateDecisionListDto } from './dto/create-decision-list.dto';
 import { UpdateDecisionListDto } from './dto/update-decision-list.dto';
@@ -12,14 +12,14 @@ export class DecisionListsController {
     return this.decisionListsService.create(createDecisionListDto);
   }
 
-  @Get()
-  findAll() {
-    return this.decisionListsService.findAll();
-  }
+  // @Get()
+  // findAll() {
+  //   return this.decisionListsService.findAll();
+  // }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.decisionListsService.findOne(+id);
+  @Get()
+  findOne(@Query('workFlowName') workFlowName: string) {
+    return this.decisionListsService.findOne(+workFlowName);
   }
 
   @Patch(':id')
