@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DecisionListsController } from './decision-lists.controller';
-import { DecisionListsService } from './decision-lists.service';
+import { DecisionListsService } from '../services/decision-lists.service';
 
 describe('DecisionListsController', () => {
   let controller: DecisionListsController;

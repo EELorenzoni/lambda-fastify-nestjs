@@ -6,13 +6,16 @@ provider:
   runtime: nodejs20.x
   region: us-east-1
   stage: ${opt:stage, 'dev'}
+  environment:
+    DYNAMODB_URL: "${env:DYNAMODB_URL}"
+    TABLE_NAME: "${env:TABLE_NAME}"
 configValidationMode: error
 useDotenv: true
 
 functions:
   main:
     handler: dist/lambda.handler
-    timeout: 900
+    timeout: "${env:TIMEOUT}"
     events:
       - http:
           method: GET
