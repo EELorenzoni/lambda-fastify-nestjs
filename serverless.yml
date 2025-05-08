@@ -9,6 +9,9 @@ provider:
   environment:
     DYNAMODB_URL: "${env:DYNAMODB_URL}"
     TABLE_NAME: "${env:TABLE_NAME}"
+    REDIS_HOST: "${env:REDIS_HOST}"
+    REDIS_PORT: "${env:REDIS_PORT}"
+    REDIS_USE_CLUSTER: "${env:REDIS_USE_CLUSTER}"
 configValidationMode: error
 useDotenv: true
 
@@ -23,6 +26,9 @@ functions:
       - http:
           method: GET
           path: /{proxy+}
+      - http:
+          method: DELETE
+          path: /{proxy+}
 custom:
   prune:
     automatic: true
@@ -33,6 +39,5 @@ custom:
       - httpApi:
           method: "GET"
           path: "/{proxy+}"
-
 plugins:
   - serverless-offline

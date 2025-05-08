@@ -34,6 +34,9 @@ async function initFastify(): Promise<Handler> {
 }
 
 export const handler = async (event: APIGatewayProxyEvent, context: Context, callback: Callback) => {
+    // la lambda recibe el evento y el contexto
+    // por primera vez crea la aplicación con todos los módulos para esta lambda, 
+    // luego la applicacion no se vuelve a crear, sino que se recupera de la memoria ya cacheada.
     cachedHandler = cachedHandler ?? (await initFastify());
     return cachedHandler(event, context, callback);
 };

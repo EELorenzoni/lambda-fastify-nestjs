@@ -10,7 +10,7 @@ interface DynamoDbItem {
 }
 
 @Injectable()
-export class DecisionListsRepository {
+export class DecisionListsDatabaseRepository {
     private dynamoDb!: DynamoDB.DocumentClient;
     private readonly tableName = process.env['TABLE_NAME'] ?? '';
 

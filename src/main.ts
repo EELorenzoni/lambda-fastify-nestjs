@@ -4,10 +4,13 @@ import { AppModule } from "./app.module";
 
 
 async function bootstrap() {
+    //   app con fastify
     const app = await NestFactory.create<NestFastifyApplication>(
         AppModule,
         new FastifyAdapter()
     );
+    // app con express
+    // const app = await NestFactory.create(AppModule);
     await app.listen(3000);
 }
 bootstrap();
